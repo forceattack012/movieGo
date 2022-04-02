@@ -27,6 +27,9 @@ func main() {
 	movieRepo := repositories.NewMovieRepository(mongoDb, "Movies")
 	movieService := services.NewMovieService(movieRepo)
 
+	theaterRepo := repositories.NewTheaterRepository(mongoDb, "Theater")
+	theaterService := services.NewTheaterService(theaterRepo)
+
 	e := echo.New()
 	e.Validator = &ValidateRequest{
 		v: validator.New(),
@@ -34,6 +37,7 @@ func main() {
 
 	routes.HelloRoutes(e)
 	routes.NewMovieRouter(e, movieService)
+	routes.NewTheaterRouter(e, theaterService)
 
 	e.Logger.Fatal(e.Start(":3000"))
 }
