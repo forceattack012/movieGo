@@ -5,17 +5,36 @@ import (
 	"backend/internal/repositories"
 	"backend/internal/routes"
 	"backend/internal/services"
+	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/go-playground/validator"
 	"github.com/labstack/echo/v4"
+	"github.com/spf13/viper"
 )
 
-func main() {
-	config := mongo.BuildConfig()
-	mongoDb, err := mongo.Connect(config)
+var err error
 
+func main() {
+	viper.SetConfigName("config")
+	viper.AddConfigPath("./config/")
+	viper.AutomaticEnv()
+
+	err := viper.ReadInConfig()
+
+	if err != nil {
+		panic(fmt.Errorf("fatal error config file: %s \n", err))
+	}
+
+	log.Println(viper.GetString("app.env"))
+
+	host := viper.GetString("mongodb.host")
+	port := viper.GetString("mongodb.port")
+	databaseName := viper.GetString("mongodb.databaseName")
+
+	config := mongo.BuildConfig(host, port, databaseName)
+	mongoDb, err := mongo.Connect(config)
 	mongo.DeleteSeed(mongoDb, "Movies")
 	mongo.Seed(mongoDb, "Movies")
 
@@ -23,6 +42,16 @@ func main() {
 		log.Println(err)
 		return
 	}
+
+	// configPg := postgre.BuildConfig()
+	// postgre.Database, err = postgre.Connect(configPg)
+
+	// if err != nil {
+	// 	log.Println(err)
+	// 	return
+	// }
+
+	// log.Println(postgre.Database)
 
 	movieRepo := repositories.NewMovieRepository(mongoDb, "Movies")
 	movieService := services.NewMovieService(movieRepo)

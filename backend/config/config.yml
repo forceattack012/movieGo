@@ -1,0 +1,14 @@
+app:
+  env:  "development"
+  port: 8080
+  debug: true
+
+mongodb:
+  host: "mongodb://localhost:"
+  port: "27017"
+  databaseName: "Movies"
+
+
+log:
+  level: "debug"
+  format: "json"

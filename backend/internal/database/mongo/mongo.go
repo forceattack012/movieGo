@@ -19,11 +19,11 @@ type MongoConfig struct {
 	DatabaseName string
 }
 
-func BuildConfig() *MongoConfig {
+func BuildConfig(host string, port string, databaseName string) *MongoConfig {
 	return &MongoConfig{
-		Host:         "mongodb://localhost:",
-		Port:         "27017",
-		DatabaseName: "Movies",
+		Host:         host,
+		Port:         port,
+		DatabaseName: databaseName,
 	}
 }
 
