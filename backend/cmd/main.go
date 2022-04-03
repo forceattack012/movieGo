@@ -36,7 +36,7 @@ func main() {
 	config := mongo.BuildConfig(host, port, databaseName)
 	mongoDb, err := mongo.Connect(config)
 	mongo.DeleteSeed(mongoDb, "Movies")
-	mongo.Seed(mongoDb, "Movies")
+	//mongo.Seed(mongoDb, "Movies")
 
 	if err != nil {
 		log.Println(err)
@@ -68,7 +68,7 @@ func main() {
 	routes.NewMovieRouter(e, movieService)
 	routes.NewTheaterRouter(e, theaterService)
 
-	e.Logger.Fatal(e.Start(":3000"))
+	e.Logger.Fatal(e.Start(":5001"))
 }
 
 type ValidateRequest struct {

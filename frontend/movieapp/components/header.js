@@ -7,7 +7,7 @@ export default function Header() {
         <header>
             <nav className="bg-white py-2 md:py-4">
                 <div className="container px-4 mx-auto md:flex md:items-center">
-                    <div class="flex justify-between items-center">
+                    <div className="flex justify-between items-center">
                         <Link href="/">
                             <a className="font-bold text-xl text-indigo-600">
                                 MovieGo
@@ -19,9 +19,10 @@ export default function Header() {
                     </div>
 
                     <div className="hidden md:flex flex-col md:flex-row md:ml-auto mt-3 md:mt-0">
-                        <LinkComponent>home</LinkComponent>
-                        <LinkComponent>movie</LinkComponent>
-                        <LinkComponent>theater</LinkComponent>
+                        <LinkComponent path={"/"} name="">home</LinkComponent>
+                        <LinkComponent path={"/"} name="movie">movie</LinkComponent>
+                        <LinkComponent path={"/"} name="theater">theater</LinkComponent>
+                        <LinkComponent path={"/movie"} name="/createMovie">Create Movie</LinkComponent>
                     </div>
                 </div>
             </nav>
