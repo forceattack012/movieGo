@@ -35,8 +35,7 @@ func main() {
 
 	config := mongo.BuildConfig(host, port, databaseName)
 	mongoDb, err := mongo.Connect(config)
-	mongo.DeleteSeed(mongoDb, "Movies")
-	//mongo.Seed(mongoDb, "Movies")
+	mongo.DeleteAll(mongoDb, "Movies")
 
 	if err != nil {
 		log.Println(err)

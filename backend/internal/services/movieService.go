@@ -4,6 +4,9 @@ import (
 	"backend/internal/domain"
 	"backend/internal/models"
 	"context"
+	"strings"
+
+	"github.com/google/uuid"
 )
 
 type movieService struct {
@@ -33,6 +36,9 @@ func (m *movieService) GetAllMovies(ctx context.Context) ([]models.Movie, error)
 
 // CreateMovie implements domain.MovieService
 func (m *movieService) CreateMovie(ctx context.Context, Movie *models.Movie) error {
+	uuId := uuid.New()
+	Movie.ID = strings.Replace(uuId.String(), "-", "", -1)
+
 	err := m.repo.CreateMovie(ctx, Movie)
 
 	if err != nil {
@@ -42,12 +48,18 @@ func (m *movieService) CreateMovie(ctx context.Context, Movie *models.Movie) err
 }
 
 // DeleteMovie implements domain.MovieService
-func (*movieService) DeleteMovie(id int64) error {
-	panic("unimplemented")
+func (m *movieService) DeleteMovie(ctx context.Context, id string) (int64, error) {
+	result, err := m.repo.DeleteMovie(ctx, id)
+
+	if err != nil {
+		return 0, err
+	}
+
+	return result, err
 }
 
 // GetMovieById implements domain.MovieService
-func (m *movieService) GetMovieById(ctx context.Context, id int64) (models.Movie, error) {
+func (m *movieService) GetMovieById(ctx context.Context, id string) (models.Movie, error) {
 	if ctx == nil {
 		ctx = context.Background()
 	}
@@ -63,6 +75,6 @@ func (m *movieService) GetMovieById(ctx context.Context, id int64) (models.Movie
 }
 
 // UpdateMovie implements domain.MovieService
-func (*movieService) UpdateMovie(id int64, movie *models.Movie) error {
+func (*movieService) UpdateMovie(ctx context.Context, id string, movie *models.Movie) error {
 	panic("unimplemented")
 }

@@ -61,3 +61,13 @@ func DeleteSeed(db *mongo.Database, collection string) {
 		db.Collection(collection).DeleteMany(context.Background(), filter)
 	}
 }
+
+func DeleteAll(db *mongo.Database, collection string) {
+	query, err := db.Collection(collection).Find(context.Background(), bson.D{})
+
+	if err != nil {
+		panic(err)
+	}
+
+	db.Collection(collection).DeleteMany(context.Background(), query)
+}

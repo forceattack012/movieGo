@@ -52,7 +52,7 @@ func (m *movieRepository) GetAllMovies(ctx context.Context) ([]models.Movie, err
 
 // CreateMovie implements domain.MovieRepository
 func (m *movieRepository) CreateMovie(ctx context.Context, Movie *models.Movie) error {
-	result := mapper.ConvertStructToBSONMap(m, nil)
+	result := mapper.ConvertStructToBSONMap(Movie, nil)
 	res, err := m.MongoDB.Collection(m.collection).InsertOne(ctx, result)
 
 	if err != nil {
@@ -63,12 +63,20 @@ func (m *movieRepository) CreateMovie(ctx context.Context, Movie *models.Movie) 
 }
 
 // DeleteMovie implements domain.MovieRepository
-func (*movieRepository) DeleteMovie(id int64) error {
-	panic("unimplemented")
+func (m *movieRepository) DeleteMovie(ctx context.Context, id string) (int64, error) {
+	filter := bson.D{primitive.E{Key: "ID", Value: id}}
+	result, err := m.MongoDB.Collection(m.collection).DeleteOne(ctx, filter)
+
+	if err != nil {
+		log.Fatal(err)
+		return 0, err
+	}
+
+	return result.DeletedCount, nil
 }
 
 // GetMovieById implements domain.MovieRepository
-func (m *movieRepository) GetMovieById(ctx context.Context, id int64) (models.Movie, error) {
+func (m *movieRepository) GetMovieById(ctx context.Context, id string) (models.Movie, error) {
 	result := models.Movie{}
 	filter := bson.D{primitive.E{Key: "ID", Value: id}}
 
@@ -82,6 +90,6 @@ func (m *movieRepository) GetMovieById(ctx context.Context, id int64) (models.Mo
 }
 
 // UpdateMovie implements domain.MovieRepository
-func (*movieRepository) UpdateMovie(id int64, movie *models.Movie) error {
+func (*movieRepository) UpdateMovie(ctx context.Context, id string, movie *models.Movie) error {
 	panic("unimplemented")
 }

@@ -5,7 +5,6 @@ import (
 	"backend/internal/models"
 	"context"
 	"net/http"
-	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
@@ -34,11 +33,7 @@ func (mc *movieController) GetAllMovies(ec echo.Context) error {
 }
 
 func (mc *movieController) GetMovieById(ec echo.Context) error {
-	id, err := strconv.ParseInt(ec.Param("id"), 0, 64)
-
-	if err != nil {
-		return err
-	}
+	id := ec.Param("id")
 
 	movie, err := mc.service.GetMovieById(context.Background(), id)
 
@@ -50,7 +45,6 @@ func (mc *movieController) GetMovieById(ec echo.Context) error {
 }
 
 func (mc *movieController) CreateMovie(ec echo.Context) error {
-
 	movie := new(models.Movie)
 
 	if err := ec.Bind(movie); err != nil {
@@ -68,4 +62,15 @@ func (mc *movieController) CreateMovie(ec echo.Context) error {
 	}
 
 	return ec.String(http.StatusCreated, "Create Successful")
+}
+
+func (mc *movieController) DeleteMovie(ec echo.Context) error {
+	id := ec.Param("id")
+	result, err := mc.service.DeleteMovie(context.Background(), id)
+
+	if err != nil {
+		return err
+	}
+
+	return ec.JSON(http.StatusOK, result)
 }

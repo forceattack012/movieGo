@@ -14,7 +14,7 @@ export default function Home({movies}) {
 
 
   return (
-    <div>Welcome MovieGo</div>
+    <><script src="https://unpkg.com/flowbite@1.4.1/dist/datepicker.js"></script><div>Welcome MovieGo</div></>
   )
 }
 

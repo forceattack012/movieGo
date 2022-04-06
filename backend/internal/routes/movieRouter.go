@@ -21,4 +21,5 @@ func NewMovieRouter(e *echo.Echo, movieService domain.MovieService) {
 	r.GET("/list", controllerMovie.GetAllMovies)
 	r.GET("/:id", controllerMovie.GetMovieById)
 	r.POST("/", controllerMovie.CreateMovie)
+	r.DELETE("/:id", controllerMovie.DeleteMovie)
 }

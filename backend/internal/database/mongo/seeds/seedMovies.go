@@ -5,7 +5,7 @@ import "backend/internal/models"
 func GetMovies() []models.Movie {
 	listMovies := make([]models.Movie, 0)
 	listMovies = append(listMovies, models.Movie{
-		ID:        1,
+		ID:        "4",
 		Name:      "Spider-Man 1",
 		Actors:    []string{"toby", "tom"},
 		Directors: []string{"John Carpeter"},
@@ -16,7 +16,7 @@ func GetMovies() []models.Movie {
 	)
 
 	listMovies = append(listMovies, models.Movie{
-		ID:        2,
+		ID:        "3",
 		Name:      "Spider-Man 2",
 		Actors:    []string{"toby", "tom", "andy"},
 		Directors: []string{"John Carpeter", "johnathan jo start"},
