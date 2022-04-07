@@ -75,6 +75,16 @@ func (m *movieService) GetMovieById(ctx context.Context, id string) (models.Movi
 }
 
 // UpdateMovie implements domain.MovieService
-func (*movieService) UpdateMovie(ctx context.Context, id string, movie *models.Movie) error {
-	panic("unimplemented")
+func (m *movieService) UpdateMovie(ctx context.Context, id string, movie *models.Movie) (int64, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	result, err := m.repo.UpdateMovie(ctx, id, movie)
+
+	if err != nil {
+		return 0, err
+	}
+
+	return result, nil
 }

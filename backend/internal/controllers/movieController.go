@@ -64,6 +64,27 @@ func (mc *movieController) CreateMovie(ec echo.Context) error {
 	return ec.String(http.StatusCreated, "Create Successful")
 }
 
+func (mc *movieController) UpdateMovie(ec echo.Context) error {
+	id := ec.Param("id")
+	movie := new(models.Movie)
+
+	if err := ec.Bind(&movie); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	if err := ec.Validate(movie); err != nil {
+		return err
+	}
+
+	result, err := mc.service.UpdateMovie(context.Background(), id, movie)
+
+	if err != nil {
+		return err
+	}
+
+	return ec.JSON(http.StatusOK, result)
+}
+
 func (mc *movieController) DeleteMovie(ec echo.Context) error {
 	id := ec.Param("id")
 	result, err := mc.service.DeleteMovie(context.Background(), id)

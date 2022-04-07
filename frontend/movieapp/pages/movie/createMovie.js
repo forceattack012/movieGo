@@ -113,9 +113,11 @@ export default function CreateMovie() {
                                                     {...register(`actors[${index}].name`)}
                                                     />
                                                 </div>
-                                                <div className='mb-3'>
-                                                    <button className='mt-2 ml-3 rounded-sm px-3 py-1 bg-gray-200 hover:bg-gray-300 focus:shadow-outline focus:outline-none' type="button" onClick={() => {remove(index)}}>Remove</button>
-                                                </div>
+                                                {
+                                                    index != 0 && <div className='mb-3'>
+                                                        <button className='mt-2 ml-3 rounded-sm px-3 py-1 bg-gray-200 hover:bg-gray-300 focus:shadow-outline focus:outline-none' type="button" onClick={() => {remove(index)}}>Remove</button>
+                                                    </div>
+                                                } 
                                                  <br></br>
                                             </div>
                                         )

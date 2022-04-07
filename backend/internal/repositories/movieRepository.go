@@ -90,6 +90,26 @@ func (m *movieRepository) GetMovieById(ctx context.Context, id string) (models.M
 }
 
 // UpdateMovie implements domain.MovieRepository
-func (*movieRepository) UpdateMovie(ctx context.Context, id string, movie *models.Movie) error {
-	panic("unimplemented")
+func (m *movieRepository) UpdateMovie(ctx context.Context, id string, movie *models.Movie) (int64, error) {
+	filter := bson.D{primitive.E{Key: "ID", Value: id}}
+	update := bson.M{
+		"Name":      movie.Name,
+		"Actors":    movie.Actors,
+		"Directors": movie.Directors,
+		"IMDB":      movie.IMDB,
+		"Youtube":   movie.Youtube,
+		"Duration":  movie.Duration,
+		"StartDate": movie.StartDate,
+		"Synopsis":  movie.Synopsis,
+		"Image":     movie.Image,
+	}
+
+	result, err := m.MongoDB.Collection(m.collection).UpdateOne(ctx, filter, update)
+
+	if err != nil {
+		log.Fatal(err)
+		return 0, err
+	}
+
+	return result.ModifiedCount, err
 }
