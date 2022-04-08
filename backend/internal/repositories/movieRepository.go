@@ -92,7 +92,8 @@ func (m *movieRepository) GetMovieById(ctx context.Context, id string) (models.M
 // UpdateMovie implements domain.MovieRepository
 func (m *movieRepository) UpdateMovie(ctx context.Context, id string, movie *models.Movie) (int64, error) {
 	filter := bson.D{primitive.E{Key: "ID", Value: id}}
-	update := bson.M{
+
+	update := bson.M{"$set": bson.M{
 		"Name":      movie.Name,
 		"Actors":    movie.Actors,
 		"Directors": movie.Directors,
@@ -101,8 +102,7 @@ func (m *movieRepository) UpdateMovie(ctx context.Context, id string, movie *mod
 		"Duration":  movie.Duration,
 		"StartDate": movie.StartDate,
 		"Synopsis":  movie.Synopsis,
-		"Image":     movie.Image,
-	}
+		"Image":     movie.Image}}
 
 	result, err := m.MongoDB.Collection(m.collection).UpdateOne(ctx, filter, update)
 

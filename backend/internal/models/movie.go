@@ -12,5 +12,5 @@ type Movie struct {
 	Duration  int64     `json:"duration" validate:"required"`
 	StartDate time.Time `json:"startDate" validate:"required"`
 	Synopsis  string    `json:"synopsis"`
-	Image     string    `json:"image"`
+	Image     string    `json:"image" validate:"required"`
 }

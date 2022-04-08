@@ -1,5 +1,5 @@
 
-export default function UploadFile({ imageUploadHandler, image }) {
+export default function UploadFile({ imageUploadHandler, image}) {
     return(
         <div>
             <label type="submit" className="mt-2 rounded-sm px-3 py-1 bg-gray-200 hover:bg-gray-300 focus:shadow-outline focus:outline-none">

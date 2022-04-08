@@ -7,53 +7,51 @@ import Loading from '../../../components/loading';
 import Modal from '../../../components/modal';
 
 export default function EditMovie({movie}) {
-    const names = movie?.actors?.map(item => {
-        return {
-            name: item
-        }
-    })
 
     const {register, control , handleSubmit , formState : {errors},} = useForm({
         defaultValues: {
-            actors: [{name: ""}]
-        }
+            actors: [{name: ''}],
+            oldActors: [{name: movie.actors[0]}]
+        },
     });
+
+    const size = movie.actors.lenght + 1;
 
     const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
         {
-          control,
-          name: "actors"
+            control,
+            name: "actors"
+        },
+        {
+            control,
+            name: "oldActors"
         }
       );
 
-    const [userImage, setUserImage] = useState(null);
-    const [isLoading, setLoading] = useState(false);
-    const [isModal, setModal] = useState(false);
+    const [userImage, setUserImage] = useState(null)
+    const [isLoading, setLoading] = useState(false)
+    const [isModal, setModal] = useState(false)
 
     const imageUploadHandler = (event) => {
         setUserImage(event.target.files[0])
     };
 
-    console.log(movie);
-
     const updateMovie = async(form) => {
-        setLoading(true)
-
         const f = {
             name: form.name,
             IMDB: form.IMDB,
-            image: await getBase64(userImage).then(async data => {
-                return await data
-            }),
+            image: userImage != null ? await loadImageString(userImage) : movie.image,
             startDate: moment(form.startDate, 'YYYY-MM-DD').toDate(),
             duration: parseInt(form.duration),
             youtube: form.youtube,
-            actors:[],
+            actors: [],
             directors: [form.director],
             synopsis: form.synopsis
         }
 
-
+        form.oldActors?.forEach(item => {
+            f.actors.push(item.name)
+        })
         form.actors.forEach(item => {
             f.actors.push(item.name)
         })
@@ -72,6 +70,12 @@ export default function EditMovie({movie}) {
             setLoading(false)
             setModal(true)
         }
+    }
+
+    const loadImageString = async (image) => {
+        return await getBase64(image).then(async data => {
+            return await data
+        })
     }
 
     const getBase64 = (file) => {
@@ -98,16 +102,39 @@ export default function EditMovie({movie}) {
 
                         <div className="mb-4">
                             <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300" htmlFor="movieImage">Image</label>
-                            <UploadFile imageUploadHandler={imageUploadHandler} image={userImage}/>
+                            <UploadFile imageUploadHandler={imageUploadHandler} image={userImage} />
+                            {movie.image != null && userImage == null  && <img className="rounded-t-lg" src={movie.image} style={{width: "400px", height: "400px"}} alt=""></img>}
                         </div>
 
                         <div className="mb-3">
                             <div className='flex'>
                                 <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300 mr-2" htmlFor="actor">Actor</label>
                                 <button className='mt-2 rounded-sm px-3 py-1 bg-gray-200 hover:bg-gray-300 focus:shadow-outline focus:outline-none mb-2' type="button" 
-                                    onClick={() => {insert(parseInt(2, 10), "actors" ,{ name : '' })}}>Add</button>
+                                    onClick={() => {append({name: ''})}} >Add</button>
                             </div>
                             {
+                                            movie.actors.map((actor,accIndex) => {
+                                                return (
+                                                        <div className="flex flex-wrap mb-2" key={actor+"-"+accIndex}>
+                                                            {accIndex}
+                                                            <div className='w-full md:w-5/6 mb-6 md:mb-0'>
+                                                                <input 
+                                                                name={`oldActors[${actor+"-"+accIndex}].name`}
+                                                                className="mr-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                                                type="text"
+                                                                {...register(`oldActors[${actor+"-"+accIndex}].name`, { value: `${actor}`}) }
+                                                                />
+                                                            </div>
+                                                            <div className='mb-3'>
+                                                                <button className='mt-2 ml-3 rounded-sm px-3 py-1 bg-gray-200 hover:bg-gray-300 focus:shadow-outline focus:outline-none' type="button" onClick={() => {remove(actor+"-"+accIndex)}}>Remove</button>
+                                                            </div>
+                                                            <br></br>
+                                                        </div>
+                                                )
+                                            })
+                            }
+                            {
+                                
                                     fields.map((item, index) => {
                                         return (
                                             <div className="flex flex-wrap mb-2" key={item.id}>
@@ -116,12 +143,14 @@ export default function EditMovie({movie}) {
                                                     name={`actors[${index}].name`}
                                                     className="mr-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                     type="text"
-                                                    {...register(`actors[${index}].name`)}
+                                                    {...register(`actors[${index}].name`,{ value: movie.actors[index] })}
                                                     />
                                                 </div>
-                                                <div className='mb-3'>
-                                                    <button className='mt-2 ml-3 rounded-sm px-3 py-1 bg-gray-200 hover:bg-gray-300 focus:shadow-outline focus:outline-none' type="button" onClick={() => {remove(index)}}>Remove</button>
-                                                </div>
+                                                {
+                                                    <div className='mb-3'>
+                                                        <button className='mt-2 ml-3 rounded-sm px-3 py-1 bg-gray-200 hover:bg-gray-300 focus:shadow-outline focus:outline-none' type="button" onClick={() => {remove(index)}}>Remove</button>
+                                                    </div>
+                                                } 
                                                  <br></br>
                                             </div>
                                         )
