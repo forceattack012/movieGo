@@ -23,6 +23,8 @@ export default function Header() {
                         <LinkComponent path={"/"} name="movie">movie</LinkComponent>
                         <LinkComponent path={"/"} name="theater">theater</LinkComponent>
                         <LinkComponent path={"/movie"} name="/createMovie">Create Movie</LinkComponent>
+                        <LinkComponent path={"/theater"} name="/createTheater">Create Theater</LinkComponent>
+                        <LinkComponent path={"/showTime"} name="/createShowTime">Create Show time</LinkComponent>
                     </div>
                 </div>
             </nav>

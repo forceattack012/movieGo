@@ -3,7 +3,6 @@ package services
 import (
 	"backend/internal/domain"
 	"backend/internal/models"
-	"context"
 )
 
 type TheaterService struct {
@@ -17,26 +16,36 @@ func NewTheaterService(repo domain.TheaterRepository) domain.TheaterService {
 }
 
 // CreateTheater implements domain.TheaterRepository
-func (*TheaterService) CreateTheater(ctx context.Context, theater *models.Theater) error {
-	panic("unimplemented")
+func (s *TheaterService) CreateTheater(theater *models.Theater) error {
+	if err := s.TheaterRepo.CreateTheater(theater); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // DeleteTheater implements domain.TheaterRepository
-func (*TheaterService) DeleteTheater(ctx context.Context, id int) error {
+func (*TheaterService) DeleteTheater(id int) error {
 	panic("unimplemented")
 }
 
 // GetAllTheater implements domain.TheaterRepository
-func (*TheaterService) GetAllTheater(ctx context.Context) ([]models.Theater, error) {
-	panic("unimplemented")
+func (s *TheaterService) GetAllTheater() ([]models.Theater, error) {
+	lists, err := s.TheaterRepo.GetAllTheater()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return lists, nil
 }
 
 // GetTheaterById implements domain.TheaterRepository
-func (*TheaterService) GetTheaterById(ctx context.Context, id int) (models.Theater, error) {
+func (*TheaterService) GetTheaterById(id int) (models.Theater, error) {
 	panic("unimplemented")
 }
 
 // UpdateTheater implements domain.TheaterRepository
-func (*TheaterService) UpdateTheater(ctx context.Context, id int, theater *models.Theater) error {
+func (*TheaterService) UpdateTheater(id int, theater *models.Theater) error {
 	panic("unimplemented")
 }

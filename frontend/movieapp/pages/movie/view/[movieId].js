@@ -13,7 +13,6 @@ export async function getStaticPaths() {
     const res = await fetch('http://localhost:5001/api/v1/movie/list')
     const movies = await res.json()
 
-    console.log(movies)
     const paths = movies.map(movie => {
         return {
             params : {

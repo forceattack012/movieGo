@@ -15,7 +15,6 @@ export default function EditMovie({movie}) {
         },
     });
 
-    const size = movie.actors.lenght + 1;
 
     const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
         {
@@ -116,7 +115,6 @@ export default function EditMovie({movie}) {
                                             movie.actors.map((actor,accIndex) => {
                                                 return (
                                                         <div className="flex flex-wrap mb-2" key={actor+"-"+accIndex}>
-                                                            {accIndex}
                                                             <div className='w-full md:w-5/6 mb-6 md:mb-0'>
                                                                 <input 
                                                                 name={`oldActors[${actor+"-"+accIndex}].name`}
@@ -134,7 +132,6 @@ export default function EditMovie({movie}) {
                                             })
                             }
                             {
-                                
                                     fields.map((item, index) => {
                                         return (
                                             <div className="flex flex-wrap mb-2" key={item.id}>

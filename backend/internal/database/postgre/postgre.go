@@ -1,6 +1,7 @@
 package postgre
 
 import (
+	"fmt"
 	"log"
 
 	"gorm.io/driver/postgres"
@@ -10,25 +11,30 @@ import (
 var Database *gorm.DB
 
 type PostgreConfig struct {
-	Host         string
-	User         string
-	Password     string
-	DatabaseName string
-	Port         string
+	host         string
+	user         string
+	password     string
+	databaseName string
+	port         string
 }
 
-func BuildConfig() *PostgreConfig {
+func BuildConfig(h string, u string, p string, db string, port string) *PostgreConfig {
 	return &PostgreConfig{
-		Host: "",
+		host:         h,
+		user:         u,
+		password:     p,
+		databaseName: db,
+		port:         port,
 	}
 }
 
-func Connect(config *PostgreConfig) (*gorm.DB, error) {
-	db, err := gorm.Open(postgres.Open(config.Host), &gorm.Config{})
+func Connect(config *PostgreConfig) {
+	pgConn := fmt.Sprintf("host=%s user=%s password=%s port=%s sslmode=disable TimeZone=Asia/Bangkok", config.host, config.user, config.password, config.port)
+	db, err := gorm.Open(postgres.Open(pgConn), &gorm.Config{})
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	return db, nil
+	Database = db
 }

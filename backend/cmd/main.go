@@ -2,12 +2,15 @@ package main
 
 import (
 	"backend/internal/database/mongo"
+	"backend/internal/database/postgre"
+	"backend/internal/models"
 	"backend/internal/repositories"
 	"backend/internal/routes"
 	"backend/internal/services"
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/go-playground/validator"
 	"github.com/labstack/echo/v4"
@@ -35,28 +38,31 @@ func main() {
 
 	config := mongo.BuildConfig(host, port, databaseName)
 	mongoDb, err := mongo.Connect(config)
-	mongo.DeleteAll(mongoDb, "Movies")
 
 	if err != nil {
 		log.Println(err)
 		return
 	}
 
-	// configPg := postgre.BuildConfig()
-	// postgre.Database, err = postgre.Connect(configPg)
+	hostPg := viper.GetString("postgrsdb.host")
+	user := viper.GetString("postgrsdb.user")
+	password := viper.GetString("postgrsdb.password")
+	db := viper.GetString("postgrsdb.databaseName")
+	portPg := viper.GetString("postgrsdb.port")
 
-	// if err != nil {
-	// 	log.Println(err)
-	// 	return
-	// }
+	configPg := postgre.BuildConfig(hostPg, user, password, db, portPg)
+	postgre.Connect(configPg)
 
-	// log.Println(postgre.Database)
+	postgre.Database.AutoMigrate(&models.Theater{}, &models.ShowTime{})
 
 	movieRepo := repositories.NewMovieRepository(mongoDb, "Movies")
 	movieService := services.NewMovieService(movieRepo)
 
-	theaterRepo := repositories.NewTheaterRepository(mongoDb, "Theater")
+	theaterRepo := repositories.NewTheaterRepository(postgre.Database)
 	theaterService := services.NewTheaterService(theaterRepo)
+
+	showTimeRepo := repositories.NewShowTimeRepository(postgre.Database)
+	showTimeService := services.NewShowTimeService(showTimeRepo, movieRepo)
 
 	e := echo.New()
 	e.Validator = &ValidateRequest{
@@ -66,6 +72,10 @@ func main() {
 	routes.HelloRoutes(e)
 	routes.NewMovieRouter(e, movieService)
 	routes.NewTheaterRouter(e, theaterService)
+	routes.NewShowTimeRoute(e, showTimeService)
+
+	loc, err := time.LoadLocation("Asia/Bangkok")
+	time.Local = loc
 
 	e.Logger.Fatal(e.Start(":5001"))
 }

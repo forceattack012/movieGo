@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"backend/internal/domain"
+	"backend/internal/models"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -19,12 +20,31 @@ func NewTheaterController(service domain.TheaterService) *TheaterController {
 
 func (t *TheaterController) GetAllTheater(ec echo.Context) error {
 
-	return ec.JSON(http.StatusOK, "OK Theater")
-	// //list, err := t.TheaterService.GetAllTheater()()
+	list, err := t.TheaterService.GetAllTheater()
 
-	// if err != nil {
-	// 	return err
-	// }
+	if err != nil {
+		return err
+	}
 
-	// ec.JSON(http.StatusOK, list)
+	return ec.JSON(http.StatusOK, list)
+}
+
+func (t *TheaterController) CreateTheater(ec echo.Context) error {
+	theater := new(models.Theater)
+
+	if err := ec.Bind(&theater); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	if err := ec.Validate(theater); err != nil {
+		return err
+	}
+
+	err := t.TheaterService.CreateTheater(theater)
+
+	if err != nil {
+		return err
+	}
+
+	return ec.JSON(http.StatusCreated, "create theater sucessful")
 }

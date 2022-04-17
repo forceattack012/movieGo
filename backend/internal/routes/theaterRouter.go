@@ -12,4 +12,5 @@ func NewTheaterRouter(e *echo.Echo, service domain.TheaterService) {
 
 	r := e.Group("api/v1/theater")
 	r.GET("/list", controller.GetAllTheater)
+	r.POST("/", controller.CreateTheater)
 }

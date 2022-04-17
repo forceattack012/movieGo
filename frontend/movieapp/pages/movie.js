@@ -7,10 +7,6 @@ export default function Movie({movies}) {
     const [isLoading, setLoading] = useState(false);
     const router = useRouter()
 
-    // if(movies !== null || movies !== undefined) {
-    //     setLoading(true)
-    // }
-
     const deleteMovie = async (id) => {
         const requestOptions = {
             method: 'DELETE',
@@ -26,7 +22,11 @@ export default function Movie({movies}) {
     }
 
     const editMove = async(id) => {
-        router.push(`movie/edit/${id}`);
+        router.push(`movie/edit/${id}`)
+    }
+
+    const gotoBuy = async(id) => {
+        router.push(`/showTime/view//${id}`)
     }
 
     return (
@@ -53,6 +53,7 @@ export default function Movie({movies}) {
                                                 {movie.synopsis}
                                             </p>
                                             <button type="button" onClick={() => editMove(movie.id)} className="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">Edit</button>
+                                            <button type="button" onClick={() => gotoBuy(movie.id)} className="mr-3 ml-2 inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">Buy</button>
                                             <button type="button" onClick={() => deleteMovie(movie.id)} className="mr-3 ml-2 inline-block px-6 py-2.5 bg-red-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-red-700 hover:shadow-lg focus:bg-red-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-red-800 active:shadow-lg transition duration-150 ease-in-out">Delete</button>
                                         </div>
                                     </div>
@@ -71,6 +72,5 @@ export async function getStaticProps() {
     const response = await fetch('http://localhost:5001/api/v1/movie/list')
     const movies = await response.json();
 
-    console.log(movies)
     return { props: { movies }}
 }
