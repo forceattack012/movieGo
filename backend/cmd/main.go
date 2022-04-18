@@ -53,7 +53,7 @@ func main() {
 	configPg := postgre.BuildConfig(hostPg, user, password, db, portPg)
 	postgre.Connect(configPg)
 
-	postgre.Database.AutoMigrate(&models.Theater{}, &models.ShowTime{})
+	postgre.Database.AutoMigrate(&models.Theater{}, &models.ShowTime{}, &models.Seat{})
 
 	movieRepo := repositories.NewMovieRepository(mongoDb, "Movies")
 	movieService := services.NewMovieService(movieRepo)

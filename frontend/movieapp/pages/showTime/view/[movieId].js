@@ -40,10 +40,10 @@ export default function ViewShowTimes({showTimes, movie}) {
                                     <div className="text-gray-900 text-xl font-medium mb-2">{showtime.Theater.name}</div>
                                         <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">{movie.synopsis}</p>
                                     <div>
-                                            {showtime.times.map((time, index) => {
+                                            {showtime.times.map((time) => {
                                                 return (
-                                                    <button key={index} type="button" onClick={() => console.log(showtime.id)} className="mr-3 ml-2 inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">
-                                                        {moment(time).format("HH:mm")}
+                                                    <button key={time.id} type="button" onClick={() => console.log(time.id)} className="mr-3 ml-2 inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">
+                                                        {moment(time.times).format("HH:mm")}
                                                     </button>
                                                 )
                                             })}

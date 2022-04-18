@@ -1,7 +1,8 @@
 import Layout from "../../components/layout";
-import {useForm} from 'react-hook-form'
+import {useForm, Controller} from 'react-hook-form'
 import { useState } from "react";
 import Modal from '../../components/modal';
+import Select from "react-select";
 
 export default function CreateTheater() {
 
@@ -11,12 +12,19 @@ export default function CreateTheater() {
         }
     })
 
+    const selectOptionsSize = [
+        {value: "Small", label: "Small"},
+        {value: "Medium", label: "Medium"},
+        {value: "Large", label: "Large"}
+    ];
+
     const [isModal, setModal] = useState(false)
 
     const createTheater = async(form) => {
         const f = {
             name: form.theaterName,
-            isOpen: form.isOpen == "true" ? true : false
+            isOpen: form.isOpen == "true" ? true : false,
+            size: form.size.value
         }
 
         const create = JSON.stringify(f)
@@ -55,6 +63,18 @@ export default function CreateTheater() {
                                 <div className="ml-3 text-sm">
                                     <label htmlFor="Open" className="font-medium text-gray-900 dark:text-gray-300">Open</label>
                                 </div>
+                        </div>
+
+                        <div className="mb-4">
+                            <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300" htmlFor="size">Size</label>
+                            <Controller
+                                name="size"
+                                control={control}
+                                defaultValue=""
+                                render={({ field }) => (
+                                    <Select key={field.value} options={selectOptionsSize} {...field} label="Text field" />
+                                )}
+                            />
                         </div>
 
                         <div className="mb-4 flex justify-end">

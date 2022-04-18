@@ -35,7 +35,7 @@ func (*TheaterRepository) DeleteTheater(id int) error {
 func (t *TheaterRepository) GetAllTheater() ([]models.Theater, error) {
 	theaters := make([]models.Theater, 0)
 
-	if err := t.db.Find(&theaters).Error; err != nil {
+	if err := t.db.Preload("Seat").Find(&theaters).Error; err != nil {
 		return nil, err
 	}
 

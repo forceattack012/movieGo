@@ -2,6 +2,7 @@ import Layout from "../components/layout";
 
 
 export default function Theater({theaters}) {
+    console.log(theaters);
     return (
         <Layout>
             {
@@ -18,7 +19,6 @@ export default function Theater({theaters}) {
 export async function getStaticProps() {
     const req = await fetch('http://localhost:5001/api/v1/theater/list');
     const theaters = await req.json();
-    console.log(theaters);
 
     return { props: { theaters }}
 }
