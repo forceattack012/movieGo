@@ -1,13 +1,16 @@
-package models
+package dtos
 
-import "time"
+import (
+	"backend/internal/models"
+	"time"
+)
 
 type ResponseShowTime struct {
 	Id        int32   `json:"id" autoIncrement:"true"`
 	Times     []Times `json:"times" validate:"required"`
 	MovieId   string  `json:"movieId" validate:"required"`
 	TheaterId int64   `json:"theaterId" validate:"required"`
-	Theater   Theater
+	Theater   models.Theater
 }
 
 type Times struct {

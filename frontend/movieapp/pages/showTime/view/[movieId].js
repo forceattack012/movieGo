@@ -7,6 +7,7 @@ import { useRouter } from "next/router"
 export default function ViewShowTimes({showTimes, movie}) {
     const [isLoading, setLoading] = useState(false)
     const router = useRouter()
+    console.log(showTimes)
 
     const deleteShowTime = async(id) => {
         const requestOptions = {
@@ -22,7 +23,9 @@ export default function ViewShowTimes({showTimes, movie}) {
         }
     }
 
-    console.log(showTimes)
+    const gotoBooking = async(id) => {
+        router.push(`/booking/${id}`)
+    }
     return (
         <Layout>
             <Loading isLoading={isLoading} />
@@ -42,7 +45,7 @@ export default function ViewShowTimes({showTimes, movie}) {
                                     <div>
                                             {showtime.times.map((time) => {
                                                 return (
-                                                    <button key={time.id} type="button" onClick={() => console.log(time.id)} className="mr-3 ml-2 inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">
+                                                    <button key={time.id} type="button" onClick={() => gotoBooking(time.id)} className="mr-3 ml-2 inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">
                                                         {moment(time.times).format("HH:mm")}
                                                     </button>
                                                 )
@@ -96,3 +99,4 @@ export async function getStaticProps(context) {
         props : {showTimes, movie}
     }
 }
+

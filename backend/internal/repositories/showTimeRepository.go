@@ -21,13 +21,13 @@ func NewShowTimeRepository(conn *gorm.DB) domain.ShowTimeRepository {
 }
 
 // GetAllSeatByShowTimeId implements domain.ShowTimeRepository
-func (s *ShowTimeRepository) GetAllSeatByShowTimeId(showTimeId int32) ([]models.Seat, error) {
-	seats := make([]models.Seat, 0)
-	if err := s.db.Where(&models.ShowTime{Id: showTimeId}).Joins("Theater").Joins("Seat").Find(&seats).Error; err != nil {
+func (s *ShowTimeRepository) GetAllSeatByShowTimeId(showTimeId int32) (*models.ShowTime, error) {
+	result := models.ShowTime{}
+	if err := s.db.Where(&models.ShowTime{Id: showTimeId}).Preload("Theater").Preload("Booking").Find(&result).Error; err != nil {
 		return nil, err
 	}
 
-	return seats, nil
+	return &result, nil
 }
 
 // GetShowTimesByMovieId implements domain.ShowTimeRepository

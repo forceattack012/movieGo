@@ -7,6 +7,7 @@ type SeatRepository interface {
 	CreateSeatList(seat []models.Seat) error
 	GetAllSeat() ([]models.Seat, error)
 	GetAllSeatByShowTimeId(showTimeId int32) ([]models.Seat, error)
+	GetAllSeatByTheaterId(theaterId int32) ([]models.Seat, error)
 }
 
 type SeatService interface {

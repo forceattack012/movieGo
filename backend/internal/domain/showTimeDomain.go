@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"backend/internal/dtos"
 	"backend/internal/models"
 	"time"
 )
@@ -10,7 +11,7 @@ type ShowTimeService interface {
 	GetAllShowTime() ([]models.ShowTime, error)
 	DeleteShowTime(id int64) error
 	GetShowTimeSlot(theaterId int64) []time.Time
-	GetShowTimesByMovieId(movieId string) ([]models.ResponseShowTime, error)
+	GetShowTimesByMovieId(movieId string) ([]dtos.ResponseShowTime, error)
 }
 
 type ShowTimeRepository interface {
@@ -21,4 +22,5 @@ type ShowTimeRepository interface {
 	GetShowTimeSlot(theaterId int64) ([]time.Time, error)
 	IsShowTimeByTheaterAndTime(theaterId int64, time time.Time) (bool, error)
 	GetShowTimesByMovieId(movieId string) ([]models.ShowTime, error)
+	GetAllSeatByShowTimeId(showTimeId int32) (*models.ShowTime, error)
 }

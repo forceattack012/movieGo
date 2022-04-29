@@ -28,6 +28,7 @@ func (s *TheaterService) CreateTheater(theater *models.Theater) error {
 		theater.Seat = append(theater.Seat, models.Seat{
 			SeatNumber: i,
 			TheaterId:  int(theater.Id),
+			Price:      200.00,
 		})
 	}
 

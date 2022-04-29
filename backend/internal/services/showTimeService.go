@@ -2,6 +2,7 @@ package services
 
 import (
 	"backend/internal/domain"
+	"backend/internal/dtos"
 	"backend/internal/models"
 	"context"
 	"fmt"
@@ -22,19 +23,19 @@ func NewShowTimeService(repo domain.ShowTimeRepository, mRepo domain.MovieReposi
 }
 
 // GetShowTimesByMovieId implements domain.ShowTimeService
-func (service *ShowTimeService) GetShowTimesByMovieId(movieId string) ([]models.ResponseShowTime, error) {
+func (service *ShowTimeService) GetShowTimesByMovieId(movieId string) ([]dtos.ResponseShowTime, error) {
 	lists, err := service.repo.GetShowTimesByMovieId(movieId)
 
 	if err != nil {
 		return nil, err
 	}
 
-	showTimes := make([]models.ResponseShowTime, 0)
-	times := make(map[int64][]models.Times, 0)
+	showTimes := make([]dtos.ResponseShowTime, 0)
+	times := make(map[int64][]dtos.Times, 0)
 	keys := make(map[int]bool)
 
 	for _, l := range lists {
-		times[int64(l.TheaterId)] = append(times[int64(l.Id)], models.Times{
+		times[int64(l.TheaterId)] = append(times[int64(l.TheaterId)], dtos.Times{
 			Id:   l.Id,
 			Time: l.Time,
 		})
@@ -43,9 +44,9 @@ func (service *ShowTimeService) GetShowTimesByMovieId(movieId string) ([]models.
 	for _, sh := range lists {
 		if _, value := keys[int(sh.TheaterId)]; !value {
 			keys[int(sh.TheaterId)] = true
-			sort.Sort(models.TimeSlice(times[int64(sh.TheaterId)]))
+			sort.Sort(dtos.TimeSlice(times[int64(sh.TheaterId)]))
 
-			showTimes = append(showTimes, models.ResponseShowTime{
+			showTimes = append(showTimes, dtos.ResponseShowTime{
 				Times:     times[int64(sh.TheaterId)],
 				MovieId:   sh.MovieId,
 				TheaterId: sh.TheaterId,

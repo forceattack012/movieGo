@@ -64,6 +64,11 @@ func main() {
 	showTimeRepo := repositories.NewShowTimeRepository(postgre.Database)
 	showTimeService := services.NewShowTimeService(showTimeRepo, movieRepo)
 
+	bookingRepo := repositories.NewBookingRepository(postgre.Database)
+
+	seatRepo := repositories.NewSeatRepository(postgre.Database)
+	bookingService := services.NewBookingService(bookingRepo, showTimeRepo, seatRepo, movieRepo)
+
 	e := echo.New()
 	e.Validator = &ValidateRequest{
 		v: validator.New(),
@@ -73,6 +78,7 @@ func main() {
 	routes.NewMovieRouter(e, movieService)
 	routes.NewTheaterRouter(e, theaterService)
 	routes.NewShowTimeRoute(e, showTimeService)
+	routes.NewBookingRouter(e, bookingService)
 
 	loc, err := time.LoadLocation("Asia/Bangkok")
 	time.Local = loc

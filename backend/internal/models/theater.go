@@ -1,6 +1,9 @@
 package models
 
+import "gorm.io/gorm"
+
 type Theater struct {
+	gorm.Model
 	Id       int64      `json:"id" autoIncrement:"true"`
 	Name     string     `json:"name" validate:"required"`
 	IsOpen   bool       `json:"isOpen"`

@@ -46,6 +46,18 @@ func (s *SeatRepository) CreateSeatList(seat []models.Seat) error {
 }
 
 // GetAllSeat implements domain.SeatRepository
-func (*SeatRepository) GetAllSeat() ([]models.Seat, error) {
-	panic("unimplemented")
+func (s *SeatRepository) GetAllSeat() ([]models.Seat, error) {
+	seats := make([]models.Seat, 0)
+	s.db.Find(&seats)
+	return seats, nil
+}
+
+// GetAllSeat implements domain.SeatRepository
+func (s *SeatRepository) GetAllSeatByTheaterId(theaterId int32) ([]models.Seat, error) {
+	seats := make([]models.Seat, 0)
+	if err := s.db.Where(&models.Seat{TheaterId: int(theaterId)}).Find(&seats).Error; err != nil {
+		return nil, err
+	}
+
+	return seats, nil
 }
