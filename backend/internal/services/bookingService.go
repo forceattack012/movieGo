@@ -75,3 +75,14 @@ func (s *BookingService) GetAllSeatsByShowTimeId(showTime int32) (*dtos.ReponseB
 	return res, nil
 
 }
+
+// GetAllBooking implements domain.BookingService
+func (bs *BookingService) GetAllBooking() ([]models.Booking, error) {
+	result, err := bs.repo.GetAllBooking()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}

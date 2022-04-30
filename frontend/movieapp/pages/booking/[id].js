@@ -6,21 +6,31 @@ export default function Booking({showTimes}) {
     const [selectSeats, setSeat] = useState('')
     const [total, setTotal] = useState(0)
 
+    console.log(showTimes);
+
     const submit = async() =>{
+        const result = [];
         const split = selectSeats.split(' ');
-        const seat = split.map(s => {
-            return showTimes.seats.filter(st => st.seatNumber == s)
+        split.map(s => {
+            const filter = showTimes.seats.filter(st => st.seatNumber == s)
+            filter.forEach(element => {
+                result.push({
+                    seatNumber: element.seatNumber,
+                    theaterId: element.theaterId,
+                    price: element.price
+                })
+            });
+            return result
         })
 
         const booking = {
-            showtimeId: showTimes.id,
+            showtimeId: showTimes.showTimeId,
             timestamp: moment(Date.UTC, 'YYYY-MM-DD').toDate(),
-            seat: seat.filter(s => s.length != 0),
+            seat: result.filter(s => s.length != 0),
             total: total
         } 
 
         const create = JSON.stringify(booking)
-        console.log(create)
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -28,7 +38,6 @@ export default function Booking({showTimes}) {
         };
 
         const response = await fetch('http://localhost:5001/api/v1/booking/', requestOptions)
-        console.log(response)
     }
     return (
         <Layout>
@@ -40,7 +49,7 @@ export default function Booking({showTimes}) {
                 {
                 showTimes.seats.map(seat=> {
                     return (
-                        showTimes.bookingSeats.length != 0 && 
+                        showTimes.bookingSeats.length > 0 && 
                             showTimes.bookingSeats.map(bk => {
                                 if(seat.id === bk.id) {
                                     return 'sdsdsdsadas'
@@ -49,7 +58,7 @@ export default function Booking({showTimes}) {
                                         <button key={seat.seatNumber} onClick={ () => {setSeat(selectSeats +' '+ showTimes.seats.filter(s => s.seatNumber == seat.seatNumber).seatNumber), setTotal(total + seat.price) }} className="mr-3 ml-2 inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">{seat.seatNumber}</button>
                                    </div>
                                 }
-                            })                       
+                            })
                     )
                 })
             }

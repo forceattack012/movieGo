@@ -5,7 +5,6 @@ import (
 	"backend/internal/models"
 
 	"gorm.io/gorm"
-	"gorm.io/gorm/clause"
 )
 
 type BookingRepository struct {
@@ -32,9 +31,18 @@ func (br *BookingRepository) CreateBooking(booking *models.Booking) error {
 // GetAllSeatsByShowTimeId implements domain.BookingRepository
 func (br *BookingRepository) GetAllSeatsByShowTimeId(showTime int64) (*models.Booking, error) {
 	booking := models.Booking{}
-	if err := br.db.Preload(clause.Associations).Where(models.ShowTime{Id: int32(showTime)}).FirstOrInit(&booking).Error; err != nil {
+	if err := br.db.Where(models.ShowTime{Id: int32(showTime)}).Preload("Seat").Find(&booking).Error; err != nil {
 		return nil, err
 	}
 
 	return &booking, nil
+}
+
+func (br *BookingRepository) GetAllBooking() ([]models.Booking, error) {
+	bookings := make([]models.Booking, 0)
+	if err := br.db.Find(&bookings).Error; err != nil {
+		return nil, err
+	}
+
+	return bookings, nil
 }

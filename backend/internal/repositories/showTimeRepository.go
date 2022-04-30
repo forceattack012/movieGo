@@ -23,7 +23,7 @@ func NewShowTimeRepository(conn *gorm.DB) domain.ShowTimeRepository {
 // GetAllSeatByShowTimeId implements domain.ShowTimeRepository
 func (s *ShowTimeRepository) GetAllSeatByShowTimeId(showTimeId int32) (*models.ShowTime, error) {
 	result := models.ShowTime{}
-	if err := s.db.Where(&models.ShowTime{Id: showTimeId}).Preload("Theater").Preload("Booking").Find(&result).Error; err != nil {
+	if err := s.db.Where(&models.ShowTime{Id: showTimeId}).Preload("Booking").Preload("Theater").Find(&result).Error; err != nil {
 		return nil, err
 	}
 
